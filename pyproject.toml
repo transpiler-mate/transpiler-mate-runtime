@@ -56,7 +56,7 @@ packages = ["src/transpiler_mate"]
 path = "src/transpiler_mate/__about__.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["src/transpiler_mate", "tests", "examples", "docs", "README.md", "mkdocs.yml", "pyproject.toml"]
+include = ["src/transpiler_mate", "tests", "examples", "docs", "README.md", "mkdocs.yaml", "pyproject.toml"]
 
 [tool.mypy]
 strict = true

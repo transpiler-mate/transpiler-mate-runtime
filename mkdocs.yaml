@@ -1,0 +1,51 @@
+site_name: transpiler-mate-runtime
+site_description: Runtime discovery, execution, and CLI adapter for transpiler-mate plugins
+site_url: https://terradue.github.io/transpiler-mate-runtime/
+repo_url: https://github.com/Terradue/transpiler-mate-runtime
+repo_name: Terradue/transpiler-mate-runtime
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Tutorials:
+      - tutorials/index.md
+      - Get started: tutorials/getting-started.md
+  - How-to guides:
+      - how-to/index.md
+      - Bundle a CWL document: how-to/bundle-a-cwl-document.md
+      - Select a process: how-to/select-a-process.md
+      - Access remote sources: how-to/access-remote-sources.md
+      - Register a plugin: how-to/register-a-plugin.md
+  - Reference:
+      - reference/index.md
+      - Command-line interface: reference/cli.md
+      - Plugin loading: reference/plugin-loading.md
+      - Context resolution: reference/context-resolution.md
+      - Built-in bundle plugin: reference/bundle-plugin.md
+      - Errors and exit codes: reference/errors-and-exit-codes.md
+  - Explanation:
+      - explanation/index.md
+      - Architecture: explanation/architecture.md
+      - Plugin lifecycle: explanation/plugin-lifecycle.md
+      - CWL metadata: explanation/cwl-metadata.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+strict: true
