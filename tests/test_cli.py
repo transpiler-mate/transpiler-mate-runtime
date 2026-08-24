@@ -177,7 +177,7 @@ def test_plugin_command_builds_options_and_context() -> None:
     assert result.exit_code == 0, result.output
     assert len(calls) == 1
     received_context, options = calls[0]
-    assert received_context.source == Path("workflow.cwl").absolute()
+    assert received_context.source == Path("workflow.cwl").absolute().as_uri()
     assert options.output == Path("result.json")
     assert options.retries == 3
     assert options.verbose is True
@@ -422,7 +422,7 @@ def test_plugin_builds_context_and_passes_it_to_plugin(
     assert result.exit_code == 0, result.output
     assert len(calls) == 1
     context, options = calls[0]
-    assert context.source == Path("workflow.cwl").absolute()
+    assert context.source == Path("workflow.cwl").absolute().as_uri()
     assert context.document is process
     assert context.metadata is metadata
     assert options.output == Path("result.json")
