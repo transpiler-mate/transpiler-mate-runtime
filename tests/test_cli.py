@@ -373,7 +373,7 @@ def test_plugin_builds_context_and_passes_it_to_plugin(
 ) -> None:
     calls: list[tuple[TranspilerContext, ExampleOptions]] = []
     _install_runtime_plugin(monkeypatch, _recording_plugin(calls))
-    process = Workflow(inputs=[], outputs=[], steps=[])
+    process = {"asd": Workflow(id="asd", inputs=[], outputs=[], steps=[])}
     metadata = SoftwareApplication.model_construct()
 
     def adapter() -> object:
@@ -394,7 +394,7 @@ def test_plugin_builds_context_and_passes_it_to_plugin(
 
     def load_document(*, path: str, session: object) -> Process:
         del path, session
-        return process
+        return process["asd"]
 
     def extract_metadata(
         document: Process | list[Process],
@@ -416,13 +416,15 @@ def test_plugin_builds_context_and_passes_it_to_plugin(
 
     result = CliRunner().invoke(
         cli.main,
-        ["demo", "--output", "result.json", "workflow.cwl"],
+        ["demo", "--output", "result.json", "workflow.cwl#asd"],
     )
 
     assert result.exit_code == 0, result.output
     assert len(calls) == 1
     context, options = calls[0]
     assert context.source == AnyUrl(Path("workflow.cwl").absolute().as_uri())
-    assert context.document is process
+    assert context.document == process
     assert context.metadata is metadata
+    assert context.process_id == "asd"
+    assert context.resolved_process == process["asd"]
     assert options.output == Path("result.json")
