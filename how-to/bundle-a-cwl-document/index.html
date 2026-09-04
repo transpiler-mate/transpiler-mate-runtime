@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://terradue.github.io/transpiler-mate-runtime/how-to/bundle-a-cwl-document/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Bundle a CWL document - transpiler-mate-runtime</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Bundle a CWL document";
+        var mkdocs_page_input_path = "how-to/bundle-a-cwl-document.md";
+        var mkdocs_page_url = "/transpiler-mate-runtime/how-to/bundle-a-cwl-document/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> transpiler-mate-runtime
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting-started/">Get started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Bundle a CWL document</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#bundle-a-local-document">Bundle a local document</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#bundle-an-http-or-https-document">Bundle an HTTP or HTTPS document</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#bundle-an-oci-document">Bundle an OCI document</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#check-the-result">Check the result</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../select-a-process/">Select a process</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../access-remote-sources/">Access remote sources</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../register-a-plugin/">Register a plugin</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/cli/">Command-line interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/plugin-loading/">Plugin loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/context-resolution/">Context resolution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bundle-plugin/">Built-in bundle plugin</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/errors-and-exit-codes/">Errors and exit codes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/">Explanation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/plugin-lifecycle/">Plugin lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/cwl-metadata/">CWL metadata</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">transpiler-mate-runtime</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">How-to guides</li>
+      <li class="breadcrumb-item active">Bundle a CWL document</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Terradue/transpiler-mate-runtime/edit/master/docs/how-to/bundle-a-cwl-document.md">Edit on Terradue/transpiler-mate-runtime</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="bundle-a-cwl-document">Bundle a CWL document<a class="headerlink" href="#bundle-a-cwl-document" title="Permanent link">&para;</a></h1>
+<p>Use the built-in <code>bundle</code> plugin to load a CWL document and serialize the
+resolved document to a local file.</p>
+<h2 id="bundle-a-local-document">Bundle a local document<a class="headerlink" href="#bundle-a-local-document" title="Permanent link">&para;</a></h2>
+<p>Pass the destination with <code>--output</code> and the source as the final argument:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="go">transpiler-mate bundle --output build/workflow.cwl workflow.cwl</span>
+</code></pre></div>
+<p>Parent directories of the output are created automatically.</p>
+<h2 id="bundle-an-http-or-https-document">Bundle an HTTP or HTTPS document<a class="headerlink" href="#bundle-an-http-or-https-document" title="Permanent link">&para;</a></h2>
+<p>Use the source URL directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="go">transpiler-mate bundle \</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="go">  --output build/workflow.cwl \</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="go">  https://example.org/workflows/workflow.cwl</span>
+</code></pre></div>
+<p>For a protected endpoint, add a bearer token through the environment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="go">export OAUTH2_BEARER="your-token"</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="go">transpiler-mate bundle \</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="go">  --output build/workflow.cwl \</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="go">  https://example.org/workflows/workflow.cwl</span>
+</code></pre></div>
+<p>You can also pass <code>--oauth2-bearer</code>, but an environment variable is less likely
+to expose the token in shell history or process listings.</p>
+<h2 id="bundle-an-oci-document">Bundle an OCI document<a class="headerlink" href="#bundle-an-oci-document" title="Permanent link">&para;</a></h2>
+<p>Configure the registry connection and pass an <code>oci://</code> source:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="go">export OCI_HOSTNAME="registry.example.org"</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="go">export OCI_USERNAME="your-user"</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="go">export OCI_PASSWORD="your-password"</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="go">transpiler-mate bundle \</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="go">  --output build/workflow.cwl \</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="go">  oci://namespace/workflow:tag</span>
+</code></pre></div>
+<p>The exact OCI path semantics are implemented by the installed
+<code>session-adapters</code> package. The runtime supplies the hostname and credentials
+to its OCI adapter.</p>
+<h2 id="check-the-result">Check the result<a class="headerlink" href="#check-the-result" title="Permanent link">&para;</a></h2>
+<p>A successful invocation logs <code>SUCCESS</code> and exits with status <code>0</code>. Expected
+input or output failures log <code>FAILURE</code> or <code>ERROR</code> and exit with status <code>1</code>; CLI
+usage errors exit with status <code>2</code>. See <a href="../../reference/errors-and-exit-codes/">Errors and exit codes</a>.</p>
+<p>The plugin serializes the complete loaded document. Adding a <code>#process-id</code> to
+the source selects a process in the context for plugins that use
+<code>resolved_process</code>; it does not make the built-in <code>bundle</code> plugin extract that
+process from the document.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../" class="btn btn-neutral float-left" title="How-to guides"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../select-a-process/" class="btn btn-neutral float-right" title="Select a process">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Terradue/transpiler-mate-runtime" class="fa fa-code-fork" style="color: #fcfcfc"> Terradue/transpiler-mate-runtime</a>
+        </span>
+    
+    
+      <span><a href="../" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../select-a-process/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

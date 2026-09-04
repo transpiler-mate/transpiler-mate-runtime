@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://terradue.github.io/transpiler-mate-runtime/reference/cli/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Command-line interface - transpiler-mate-runtime</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Command-line interface";
+        var mkdocs_page_input_path = "reference/cli.md";
+        var mkdocs_page_url = "/transpiler-mate-runtime/reference/cli/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> transpiler-mate-runtime
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting-started/">Get started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/bundle-a-cwl-document/">Bundle a CWL document</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/select-a-process/">Select a process</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/access-remote-sources/">Access remote sources</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/register-a-plugin/">Register a plugin</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">Reference</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Command-line interface</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#root-command">Root command</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#plugin-commands">Plugin commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pydantic-to-click-mapping">Pydantic-to-Click mapping</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../plugin-loading/">Plugin loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../context-resolution/">Context resolution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundle-plugin/">Built-in bundle plugin</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../errors-and-exit-codes/">Errors and exit codes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/">Explanation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/plugin-lifecycle/">Plugin lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/cwl-metadata/">CWL metadata</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">transpiler-mate-runtime</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Command-line interface</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Terradue/transpiler-mate-runtime/edit/master/docs/reference/cli.md">Edit on Terradue/transpiler-mate-runtime</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="command-line-interface">Command-line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h1>
+<h2 id="root-command">Root command<a class="headerlink" href="#root-command" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>transpiler-mate [OPTIONS] COMMAND [ARGS]...
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--version</code></td>
+<td>Print the installed <code>transpiler-mate-runtime</code> version and exit.</td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>List global options and discovered plugin commands.</td>
+</tr>
+</tbody>
+</table>
+<p>Connection options do not appear on the root command. They belong to every
+dynamically generated plugin command.</p>
+<h2 id="plugin-commands">Plugin commands<a class="headerlink" href="#plugin-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>transpiler-mate PLUGIN [OPTIONS] SOURCE
+</code></pre></div>
+<p><code>SOURCE</code> is required. It can be a local path or a location handled by a mounted
+HTTP, HTTPS, file, or OCI session adapter. A <code>#process-id</code> suffix requests one
+process from the loaded document.</p>
+<p>Every plugin command receives these runtime options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Environment variable</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--oci-hostname</code></td>
+<td><code>OCI_HOSTNAME</code></td>
+<td>OCI registry hostname</td>
+</tr>
+<tr>
+<td><code>--oci-username</code></td>
+<td><code>OCI_USERNAME</code></td>
+<td>OCI username</td>
+</tr>
+<tr>
+<td><code>--oci-password</code></td>
+<td><code>OCI_PASSWORD</code></td>
+<td>OCI password</td>
+</tr>
+<tr>
+<td><code>--oauth2-bearer</code></td>
+<td><code>OAUTH2_BEARER</code></td>
+<td>Bearer token for HTTP and HTTPS</td>
+</tr>
+</tbody>
+</table>
+<p>Plugin-specific options follow the plugin's Pydantic <code>options_model</code>.</p>
+<h2 id="pydantic-to-click-mapping">Pydantic-to-Click mapping<a class="headerlink" href="#pydantic-to-click-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pydantic annotation or field</th>
+<th>Click representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str</code></td>
+<td>text option</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td>integer option</td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td>floating-point option</td>
+</tr>
+<tr>
+<td><code>Path</code></td>
+<td>path option returning <code>pathlib.Path</code></td>
+</tr>
+<tr>
+<td>Required <code>bool</code></td>
+<td>Boolean-valued option</td>
+</tr>
+<tr>
+<td>Optional/defaulted <code>bool</code></td>
+<td><code>--field/--no-field</code> flag pair</td>
+</tr>
+<tr>
+<td><code>Enum</code></td>
+<td>case-insensitive choice using member names</td>
+</tr>
+<tr>
+<td><code>Literal[...]</code></td>
+<td>case-sensitive choice preserving the original value type</td>
+</tr>
+<tr>
+<td><code>list[T]</code>, <code>set[T]</code>, <code>frozenset[T]</code>, <code>Sequence[T]</code></td>
+<td>repeatable option</td>
+</tr>
+<tr>
+<td><code>tuple[T, ...]</code></td>
+<td>repeatable option</td>
+</tr>
+<tr>
+<td>Fixed <code>tuple[T1, T2, ...]</code></td>
+<td>fixed-width tuple option</td>
+</tr>
+<tr>
+<td><code>T | None</code> or <code>Optional[T]</code></td>
+<td>mapped as <code>T</code>; requiredness still comes from the field</td>
+</tr>
+<tr>
+<td>Other annotations</td>
+<td>value parsed by a Pydantic <code>TypeAdapter</code></td>
+</tr>
+</tbody>
+</table>
+<p>Field names replace underscores with hyphens. For example, <code>output_path</code>
+becomes <code>--output-path</code>. Descriptions supply option help, and static defaults
+are displayed when non-null. Values are validated again by the complete
+Pydantic model before context resolution begins, so cross-field and constrained
+field validation still applies.</p>
+<p>Collection options may be repeated:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="go">transpiler-mate example --tags alpha --tags beta source.cwl</span>
+</code></pre></div>
+<p>An enum member such as <code>Mode.FAST</code> is shown as <code>fast</code> and converted back to the
+enum value before model validation.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../" class="btn btn-neutral float-left" title="Reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../plugin-loading/" class="btn btn-neutral float-right" title="Plugin loading">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Terradue/transpiler-mate-runtime" class="fa fa-code-fork" style="color: #fcfcfc"> Terradue/transpiler-mate-runtime</a>
+        </span>
+    
+    
+      <span><a href="../" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../plugin-loading/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

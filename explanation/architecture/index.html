@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://terradue.github.io/transpiler-mate-runtime/explanation/architecture/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Architecture - transpiler-mate-runtime</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Architecture";
+        var mkdocs_page_input_path = "explanation/architecture.md";
+        var mkdocs_page_url = "/transpiler-mate-runtime/explanation/architecture/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> transpiler-mate-runtime
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting-started/">Get started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/bundle-a-cwl-document/">Bundle a CWL document</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/select-a-process/">Select a process</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/access-remote-sources/">Access remote sources</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/register-a-plugin/">Register a plugin</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/cli/">Command-line interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/plugin-loading/">Plugin loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/context-resolution/">Context resolution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bundle-plugin/">Built-in bundle plugin</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/errors-and-exit-codes/">Errors and exit codes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">Explanation</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Architecture</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#api-and-runtime-separation">API and runtime separation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#main-components">Main components</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#boundary-of-responsibility">Boundary of responsibility</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../plugin-lifecycle/">Plugin lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cwl-metadata/">CWL metadata</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">transpiler-mate-runtime</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Explanation</li>
+      <li class="breadcrumb-item active">Architecture</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Terradue/transpiler-mate-runtime/edit/master/docs/explanation/architecture.md">Edit on Terradue/transpiler-mate-runtime</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
+<p><code>transpiler-mate-runtime</code> is an adapter between an API-level plugin contract
+and concrete execution concerns: package discovery, command-line parsing,
+source access, CWL loading, and logging.</p>
+<h2 id="api-and-runtime-separation">API and runtime separation<a class="headerlink" href="#api-and-runtime-separation" title="Permanent link">&para;</a></h2>
+<p>The <code>transpiler_mate</code> package is a native namespace shared by separately
+distributed components:</p>
+<ul>
+<li><code>transpiler_mate.api</code> defines <code>TranspilerPlugin</code>, <code>TranspilerContext</code>, option
+  models, metadata models, decorators, and plugin exceptions;</li>
+<li><code>transpiler_mate.runtime</code> discovers plugins, builds commands, and resolves
+  contexts;</li>
+<li><code>transpiler_mate.plugins.bundle</code> is the built-in plugin implementation.</li>
+</ul>
+<p>This separation keeps Click out of plugin packages. A plugin can depend on the
+stable API contract without coupling itself to this runtime's user interface.</p>
+<h2 id="main-components">Main components<a class="headerlink" href="#main-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PluginGroup</code></td>
+<td>Discover entry points and expose them as lazy Click subcommands.</td>
+</tr>
+<tr>
+<td><code>plugin_loader</code></td>
+<td>Read entry-point metadata, load selected objects, and validate the plugin protocol.</td>
+</tr>
+<tr>
+<td>CLI field conversion</td>
+<td>Derive Click parameters from a plugin's Pydantic option model.</td>
+</tr>
+<tr>
+<td><code>DefaultTranspilerContextResolver</code></td>
+<td>Configure source adapters, load CWL, validate metadata, and select a process.</td>
+</tr>
+<tr>
+<td><code>software_application_extractor</code></td>
+<td>Convert preserved CWL JSON-LD metadata into the API's <code>SoftwareApplication</code>.</td>
+</tr>
+<tr>
+<td><code>bundle</code></td>
+<td>Serialize the complete resolved CWL document to a local file.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="boundary-of-responsibility">Boundary of responsibility<a class="headerlink" href="#boundary-of-responsibility" title="Permanent link">&para;</a></h2>
+<p>The runtime owns how a plugin is found and invoked. A plugin owns the actual
+transformation and its option schema. <code>cwl-loader</code> owns parsing and preserved
+document metadata; <code>session-adapters</code> owns scheme-specific transport behavior;
+the API package owns shared types.</p>
+<p>Keeping these responsibilities explicit makes alternate front ends possible:
+the plugin execution function itself accepts typed API objects and is not a
+Click callback.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../" class="btn btn-neutral float-left" title="Explanation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../plugin-lifecycle/" class="btn btn-neutral float-right" title="Plugin lifecycle">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Terradue/transpiler-mate-runtime" class="fa fa-code-fork" style="color: #fcfcfc"> Terradue/transpiler-mate-runtime</a>
+        </span>
+    
+    
+      <span><a href="../" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../plugin-lifecycle/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

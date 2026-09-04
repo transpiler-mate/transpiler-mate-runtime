@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://terradue.github.io/transpiler-mate-runtime/reference/plugin-loading/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Plugin loading - transpiler-mate-runtime</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Plugin loading";
+        var mkdocs_page_input_path = "reference/plugin-loading.md";
+        var mkdocs_page_url = "/transpiler-mate-runtime/reference/plugin-loading/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> transpiler-mate-runtime
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting-started/">Get started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/bundle-a-cwl-document/">Bundle a CWL document</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/select-a-process/">Select a process</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/access-remote-sources/">Access remote sources</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/register-a-plugin/">Register a plugin</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/">Command-line interface</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Plugin loading</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#entry-point-group">Entry-point group</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#public-loader-api">Public loader API</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#discover_pluginsgroupplugin_entry_point_group">discover_plugins(group=PLUGIN_ENTRY_POINT_GROUP)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#find_pluginname-groupplugin_entry_point_group">find_plugin(name, group=PLUGIN_ENTRY_POINT_GROUP)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#load_pluginentry_point">load_plugin(entry_point)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#load_plugin_by_namename-groupplugin_entry_point_group">load_plugin_by_name(name, group=PLUGIN_ENTRY_POINT_GROUP)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#load_pluginsgroupplugin_entry_point_group">load_plugins(group=PLUGIN_ENTRY_POINT_GROUP)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#cli-caching">CLI caching</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../context-resolution/">Context resolution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundle-plugin/">Built-in bundle plugin</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../errors-and-exit-codes/">Errors and exit codes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/">Explanation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/plugin-lifecycle/">Plugin lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/cwl-metadata/">CWL metadata</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">transpiler-mate-runtime</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Plugin loading</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Terradue/transpiler-mate-runtime/edit/master/docs/reference/plugin-loading.md">Edit on Terradue/transpiler-mate-runtime</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="plugin-loading">Plugin loading<a class="headerlink" href="#plugin-loading" title="Permanent link">&para;</a></h1>
+<h2 id="entry-point-group">Entry-point group<a class="headerlink" href="#entry-point-group" title="Permanent link">&para;</a></h2>
+<p>The default group is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>transpiler_mate.plugins
+</code></pre></div>
+<p>An entry-point name is the discovery identifier and must match the loaded
+plugin's <code>name</code> when exposed through the CLI.</p>
+<h2 id="public-loader-api">Public loader API<a class="headerlink" href="#public-loader-api" title="Permanent link">&para;</a></h2>
+<p>All names below are exported by <code>transpiler_mate.runtime.plugin_loader</code>.</p>
+<h3 id="discover_pluginsgroupplugin_entry_point_group"><code>discover_plugins(group=PLUGIN_ENTRY_POINT_GROUP)</code><a class="headerlink" href="#discover_pluginsgroupplugin_entry_point_group" title="Permanent link">&para;</a></h3>
+<p>Reads installed entry-point metadata without importing implementations.
+Returns a dictionary ordered lexicographically by entry-point name.</p>
+<p>Raises <code>DuplicatePluginError</code> when multiple distributions register the same
+name. If several names are duplicated, the lexicographically first duplicate
+is reported.</p>
+<h3 id="find_pluginname-groupplugin_entry_point_group"><code>find_plugin(name, group=PLUGIN_ENTRY_POINT_GROUP)</code><a class="headerlink" href="#find_pluginname-groupplugin_entry_point_group" title="Permanent link">&para;</a></h3>
+<p>Discovers plugins and returns the matching <code>importlib.metadata.EntryPoint</code>
+without loading it. Raises <code>PluginNotFoundError</code> if it is absent.</p>
+<h3 id="load_pluginentry_point"><code>load_plugin(entry_point)</code><a class="headerlink" href="#load_pluginentry_point" title="Permanent link">&para;</a></h3>
+<p>Calls <code>entry_point.load()</code> and verifies that the result satisfies the runtime
+<code>TranspilerPlugin</code> protocol. Raises:</p>
+<ul>
+<li><code>PluginLoadError</code> when importing or resolving the entry point fails;</li>
+<li><code>InvalidPluginError</code> when the loaded object does not implement the protocol.</li>
+</ul>
+<h3 id="load_plugin_by_namename-groupplugin_entry_point_group"><code>load_plugin_by_name(name, group=PLUGIN_ENTRY_POINT_GROUP)</code><a class="headerlink" href="#load_plugin_by_namename-groupplugin_entry_point_group" title="Permanent link">&para;</a></h3>
+<p>Combines <code>find_plugin</code> and <code>load_plugin</code>.</p>
+<h3 id="load_pluginsgroupplugin_entry_point_group"><code>load_plugins(group=PLUGIN_ENTRY_POINT_GROUP)</code><a class="headerlink" href="#load_pluginsgroupplugin_entry_point_group" title="Permanent link">&para;</a></h3>
+<p>Discovers and loads all plugins, returning a name-to-plugin dictionary.</p>
+<h2 id="cli-caching">CLI caching<a class="headerlink" href="#cli-caching" title="Permanent link">&para;</a></h2>
+<p>The root command caches discovered entry-point metadata for the lifetime of its
+Click group instance. It also caches each generated command after loading that
+plugin. Listing commands does not import plugin implementations.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../cli/" class="btn btn-neutral float-left" title="Command-line interface"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../context-resolution/" class="btn btn-neutral float-right" title="Context resolution">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Terradue/transpiler-mate-runtime" class="fa fa-code-fork" style="color: #fcfcfc"> Terradue/transpiler-mate-runtime</a>
+        </span>
+    
+    
+      <span><a href="../cli/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../context-resolution/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

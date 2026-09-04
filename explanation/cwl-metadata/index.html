@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://terradue.github.io/transpiler-mate-runtime/explanation/cwl-metadata/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>CWL metadata - transpiler-mate-runtime</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "CWL metadata";
+        var mkdocs_page_input_path = "explanation/cwl-metadata.md";
+        var mkdocs_page_url = "/transpiler-mate-runtime/explanation/cwl-metadata/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> transpiler-mate-runtime
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting-started/">Get started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/bundle-a-cwl-document/">Bundle a CWL document</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/select-a-process/">Select a process</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/access-remote-sources/">Access remote sources</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/register-a-plugin/">Register a plugin</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/cli/">Command-line interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/plugin-loading/">Plugin loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/context-resolution/">Context resolution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bundle-plugin/">Built-in bundle plugin</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/errors-and-exit-codes/">Errors and exit codes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">Explanation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../plugin-lifecycle/">Plugin lifecycle</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">CWL metadata</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#why-preserved-metadata-is-used">Why preserved metadata is used</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conversion-process">Conversion process</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#failure-boundary">Failure boundary</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">transpiler-mate-runtime</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Explanation</li>
+      <li class="breadcrumb-item active">CWL metadata</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Terradue/transpiler-mate-runtime/edit/master/docs/explanation/cwl-metadata.md">Edit on Terradue/transpiler-mate-runtime</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="cwl-metadata">CWL metadata<a class="headerlink" href="#cwl-metadata" title="Permanent link">&para;</a></h1>
+<p>The runtime treats document metadata as part of the plugin input contract, not
+as unstructured decoration. Before any plugin executes, the metadata must
+validate as the <code>SoftwareApplication</code> model supplied by
+<code>transpiler-mate-api</code>.</p>
+<h2 id="why-preserved-metadata-is-used">Why preserved metadata is used<a class="headerlink" href="#why-preserved-metadata-is-used" title="Permanent link">&para;</a></h2>
+<p>For graph documents, <code>cwl-loader</code> parses <code>$graph</code> into
+<code>cwl_utils.parser.Process</code> objects while preserving the surrounding
+document-level metadata. The extractor reads that preserved mapping instead of
+serializing the parsed process back to YAML or JSON.</p>
+<p>This matters because parser objects represent the executable CWL structure,
+while the preserved mapping retains JSON-LD terms and the document's namespace
+context.</p>
+<p>In the currently supported loader behavior, this preserved mapping comes from
+fields surrounding <code>$graph</code>. A standalone process without a <code>$graph</code> wrapper
+does not provide the document-level metadata expected by the extractor.</p>
+<h2 id="conversion-process">Conversion process<a class="headerlink" href="#conversion-process" title="Permanent link">&para;</a></h2>
+<p>The extractor performs four operations:</p>
+<ol>
+<li>obtain the first available preserved document-level metadata mapping;</li>
+<li>make a deep copy so JSON-LD processing cannot mutate the parser's retained
+   metadata;</li>
+<li>use <code>$namespaces</code> as the expansion context and compact into an empty output
+   context, producing canonical IRIs;</li>
+<li>validate the compacted mapping as <code>SoftwareApplication</code> with aliases
+   enabled.</li>
+</ol>
+<p>The empty output context is intentional: model aliases can match canonical
+Schema.org IRIs without relying on whichever short prefix the source document
+chose.</p>
+<h2 id="failure-boundary">Failure boundary<a class="headerlink" href="#failure-boundary" title="Permanent link">&para;</a></h2>
+<p>The extractor itself distinguishes missing preserved metadata from JSON-LD and
+Pydantic validation errors. During context resolution, all loading and metadata
+extraction failures are wrapped as <code>PluginFailureError</code> saying that the source
+could not be loaded as a CWL document.</p>
+<p>Consequently, plugin code can assume that <code>context.metadata</code> is already a
+validated <code>SoftwareApplication</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../plugin-lifecycle/" class="btn btn-neutral float-left" title="Plugin lifecycle"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Terradue/transpiler-mate-runtime" class="fa fa-code-fork" style="color: #fcfcfc"> Terradue/transpiler-mate-runtime</a>
+        </span>
+    
+    
+      <span><a href="../plugin-lifecycle/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
