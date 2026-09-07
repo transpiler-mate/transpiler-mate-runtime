@@ -14,12 +14,15 @@
 
 from __future__ import annotations
 
+from io import StringIO
 from pathlib import Path
 from typing import TextIO
 
 import pytest
+from cwl_loader import load_cwl_from_string_content
 from cwl_utils.parser import Process
 from cwl_utils.parser.cwl_v1_2 import Workflow
+from ruamel.yaml import YAML
 from transpiler_mate.api import (
     PluginExecutionError,
     SoftwareApplication,
@@ -33,7 +36,9 @@ def _context(document: Process | tuple[Process, ...]) -> TranspilerContext:
     return TranspilerContext.model_construct(
         source=Path("workflow.cwl"),
         metadata=SoftwareApplication.model_construct(),
-        document=document,
+        document={p.id: p for p in document}
+        if isinstance(document, tuple)
+        else {document.id: document},
     )
 
 
@@ -62,17 +67,17 @@ def test_bundle_serializes_single_process(
 
     bundle.execute(_context(process), BundleOption(output=output))
 
-    assert observed["document"] is process
+    assert observed["document"] == [process]
     assert output.read_text(encoding="utf-8") == "cwlVersion: v1.2\n"
 
 
-def test_bundle_converts_process_tuple_to_dump_cwl_list(
+def test_bundle_converts_process_index_to_dump_cwl_list(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
     processes = (
-        Workflow(inputs=[], outputs=[], steps=[]),
-        Workflow(inputs=[], outputs=[], steps=[]),
+        Workflow(id="first", inputs=[], outputs=[], steps=[]),
+        Workflow(id="second", inputs=[], outputs=[], steps=[]),
     )
     output = tmp_path / "bundle.cwl"
     observed: dict[str, object] = {}
@@ -89,6 +94,33 @@ def test_bundle_converts_process_tuple_to_dump_cwl_list(
     bundle.execute(_context(processes), BundleOption(output=output))
 
     assert observed["document"] == list(processes)
+
+
+def test_bundle_preserves_graph_and_metadata(tmp_path: Path) -> None:
+    process = load_cwl_from_string_content(
+        """cwlVersion: v1.2
+$namespaces:
+  s: https://schema.org/
+s:name: Bundle regression
+$graph:
+- id: main
+  class: Workflow
+  inputs: []
+  outputs: []
+  steps: []
+"""
+    )
+    output = tmp_path / "bundle.cwl"
+
+    bundle.execute(_context(process), BundleOption(output=output))
+
+    serialized = output.read_text(encoding="utf-8")
+    document = YAML().load(StringIO(serialized))
+    assert document["cwlVersion"] == "v1.2"
+    assert document["$namespaces"] == {"s": "https://schema.org/"}
+    assert document["s:name"] == "Bundle regression"
+    assert [p["id"] for p in document["$graph"]] == ["main"]
+    assert load_cwl_from_string_content(serialized).id == "main"
 
 
 def test_bundle_reports_serialization_failure(

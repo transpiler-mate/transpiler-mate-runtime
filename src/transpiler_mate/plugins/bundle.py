@@ -44,11 +44,7 @@ class BundleOption(BaseModel):
 def bundle(context: TranspilerContext, options: BundleOption) -> None:
     """Serialize the resolved CWL document to ``options.output``."""
 
-    document = (
-        list(context.document)
-        if isinstance(context.document, tuple)
-        else context.document
-    )
+    document = list(context.processes)
 
     logger.info(f"Serializing bundled CWL document to {options.output.absolute()}...")
 
