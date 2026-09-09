@@ -19,11 +19,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.0.1] - 2026-09-09
+
+### Fixed
+
+- `bundle` plugin invoked the documents index rather than the `Process` list.
+
 ## [1.0.0] - 2026-09-04
 
 ### Added
 
 - Initial release.
 
-[unreleased]: https://github.com/Terradue/transpiler-mate-api/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/Terradue/transpiler-mate-api/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/Terradue/transpiler-mate-api/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Terradue/state-mate/releases/tag/v1.0.0
