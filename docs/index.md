@@ -5,6 +5,12 @@ Workflow Language (CWL) documents. It provides the `transpiler-mate` command,
 turns plugin option models into command-line options, resolves local and remote
 CWL sources, and supplies a built-in `bundle` plugin.
 
+!!! tip "New in version 1.1.0: batch plugin"
+
+    Run multiple plugins sequentially with the same CWL context using the
+    [batch plugin](reference/batch-plugin.md). Define executions in `tmom.yaml`,
+    or select another file with `--file`.
+
 This package is the runtime layer. Plugin contracts and shared data models live
 in the separately distributed `transpiler-mate-api` package, so plugin packages
 can depend on the API without depending on the Click-based runtime.

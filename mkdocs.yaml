@@ -29,6 +29,7 @@ nav:
       - Plugin loading: reference/plugin-loading.md
       - Context resolution: reference/context-resolution.md
       - Built-in bundle plugin: reference/bundle-plugin.md
+      - Batch plugin: reference/batch-plugin.md
       - Errors and exit codes: reference/errors-and-exit-codes.md
   - Explanation:
       - explanation/index.md
