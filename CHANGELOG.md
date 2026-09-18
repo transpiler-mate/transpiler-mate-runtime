@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.1.0] - 2026-09-18
+
+### Added
+
+- Initial implementation of the built-in `batch` plugin.
+
 ## [1.0.1] - 2026-09-09
 
 ### Fixed
@@ -31,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[unreleased]: https://github.com/Terradue/transpiler-mate-api/compare/v1.0.1...HEAD
-[1.0.1]: https://github.com/Terradue/transpiler-mate-api/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/Terradue/state-mate/releases/tag/v1.0.0
+[unreleased]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/releases/tag/v1.0.0
