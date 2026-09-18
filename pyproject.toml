@@ -42,6 +42,7 @@ Source = "https://github.com/Terradue/transpiler-mate-runtime"
 transpiler-mate = "transpiler_mate.runtime.cli:main"
 
 [project.entry-points."transpiler_mate.plugins"]
+batch = "transpiler_mate.plugins.batch:batch"
 bundle = "transpiler_mate.plugins.bundle:bundle"
 
 [tool.hatch.build.targets.wheel]
