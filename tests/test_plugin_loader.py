@@ -14,7 +14,6 @@
 
 from __future__ import annotations
 
-from importlib.metadata import EntryPoint
 from typing import TYPE_CHECKING, cast
 
 import pytest
@@ -23,6 +22,8 @@ from transpiler_mate.api import EmptyOptions, transpiler_plugin
 from transpiler_mate.runtime import plugin_loader
 
 if TYPE_CHECKING:
+    from importlib.metadata import EntryPoint
+
     from transpiler_mate.api import TranspilerContext, TranspilerPlugin
 
 

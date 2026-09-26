@@ -57,7 +57,7 @@ from transpiler_mate.api import (
 from transpiler_mate.runtime.plugin_loader import PluginLoaderError, load_plugin_by_name
 
 if TYPE_CHECKING:
-    from transpiler_mate.api import TranspilerContext
+    from transpiler_mate.api import TranspilerContext, TranspilerPlugin
 
 
 class BatchOption(BaseModel):
@@ -86,33 +86,8 @@ _PLAN = TypeAdapter(
 def batch(context: TranspilerContext, options: BatchOption) -> None:
     """Validate the plan and invoke each plugin in document order."""
     started = perf_counter()
-    logger.debug(
-        f"Starting batch: file={options.file}, shared context id={id(context)}"
-    )
-    try:
-        logger.debug(f"Opening batch execution file {options.file} as UTF-8")
-        with options.file.open(encoding="utf-8") as stream:
-            logger.debug("Parsing batch YAML with the safe loader")
-            document = YAML(typ="safe").load(stream)
-            logger.debug(
-                f"Validating batch structure; root type={type(document).__name__}"
-            )
-            plan = _PLAN.validate_python(document, strict=True)
-    except (OSError, UnicodeError) as exc:
-        logger.debug(
-            f"Batch file read failed: file={options.file}, error type={type(exc).__name__}"
-        )
-        raise PluginExecutionError(
-            f"Unable to read execution file {options.file}"
-        ) from exc
-    except (YAMLError, ValidationError) as exc:
-        logger.debug(
-            f"Batch plan rejected: file={options.file}, error type={type(exc).__name__}"
-        )
-        raise PluginFailureError(
-            f"Invalid execution file {options.file}: expected a mapping of plugin "
-            f"names to arrays of input objects. {exc}"
-        ) from exc
+    logger.debug(f"Starting batch: file={options.file}, shared context id={id(context)}")
+    plan = _load_plan(options.file)
 
     total = sum(len(executions) for executions in plan.values())
     completed = 0
@@ -124,29 +99,9 @@ def batch(context: TranspilerContext, options: BatchOption) -> None:
         if not executions:
             logger.debug(f"Skipping plugin {name!r}: execution array is empty")
             continue
-        try:
-            logger.debug(
-                f"Discovering and loading plugin {name!r} through the runtime loader"
-            )
-            plugin = load_plugin_by_name(name)
-        except PluginLoaderError as exc:
-            logger.debug(
-                f"Plugin {name!r} could not be loaded: error type={type(exc).__name__}; stopping batch"
-            )
-            raise PluginFailureError(str(exc)) from exc
-        logger.debug(
-            f"Loaded plugin {name!r}: options model={plugin.options_model.__name__}"
-        )
-        # A batch cannot invoke itself: its default file would recurse forever.
-        if plugin.execute is batch.execute:
-            logger.debug(
-                f"Rejecting recursive batch invocation through plugin {name!r}"
-            )
-            raise PluginFailureError("A batch plan cannot invoke the batch plugin")
+        plugin = _load_batch_plugin(name)
         for index, inputs in enumerate(executions, start=1):
-            logger.info(
-                "------------------------------------------------------------------------"
-            )
+            logger.info("------------------------------------------------------------------------")
             logger.debug(
                 f"Validating plugin {name!r} execution {index}/{len(executions)}: {len(inputs)} supplied fields"
             )
@@ -181,6 +136,53 @@ def batch(context: TranspilerContext, options: BatchOption) -> None:
     logger.debug(
         f"Batch completed: file={options.file}, executions={completed}/{total}, elapsed={perf_counter() - started:.4f}s"
     )
+
+
+def _load_plan(path: Path) -> dict[str, list[dict[str, object]]]:
+    """Read and validate a batch execution plan.
+
+    Raises:
+        PluginExecutionError: If the file cannot be read.
+        PluginFailureError: If the YAML or plan structure is invalid.
+    """
+    try:
+        logger.debug(f"Opening batch execution file {path} as UTF-8")
+        with path.open(encoding="utf-8") as stream:
+            logger.debug("Parsing batch YAML with the safe loader")
+            document = YAML(typ="safe").load(stream)
+            logger.debug(f"Validating batch structure; root type={type(document).__name__}")
+            return _PLAN.validate_python(document, strict=True)
+    except (OSError, UnicodeError) as exc:
+        logger.debug(f"Batch file read failed: file={path}, error type={type(exc).__name__}")
+        raise PluginExecutionError(f"Unable to read execution file {path}") from exc
+    except (YAMLError, ValidationError) as exc:
+        logger.debug(f"Batch plan rejected: file={path}, error type={type(exc).__name__}")
+        raise PluginFailureError(
+            f"Invalid execution file {path}: expected a mapping of plugin "
+            f"names to arrays of input objects. {exc}"
+        ) from exc
+
+
+def _load_batch_plugin(name: str) -> TranspilerPlugin[BaseModel]:
+    """Load a plugin while rejecting recursive batch execution.
+
+    Raises:
+        PluginFailureError: If loading fails or the plugin invokes batch.
+    """
+    try:
+        logger.debug(f"Discovering and loading plugin {name!r} through the runtime loader")
+        plugin = load_plugin_by_name(name)
+    except PluginLoaderError as exc:
+        logger.debug(
+            f"Plugin {name!r} could not be loaded: error type={type(exc).__name__}; stopping batch"
+        )
+        raise PluginFailureError(str(exc)) from exc
+    logger.debug(f"Loaded plugin {name!r}: options model={plugin.options_model.__name__}")
+    # A batch cannot invoke itself: its default file would recurse forever.
+    if plugin.execute is batch.execute:
+        logger.debug(f"Rejecting recursive batch invocation through plugin {name!r}")
+        raise PluginFailureError("A batch plan cannot invoke the batch plugin")
+    return plugin
 
 
 __all__ = ["BatchOption", "batch"]

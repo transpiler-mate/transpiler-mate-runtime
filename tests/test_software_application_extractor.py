@@ -17,13 +17,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 import pytest
-from cwl_utils.parser import Process
 from transpiler_mate.api import SoftwareApplication
 
 from transpiler_mate.runtime import software_application_extractor as extractor
 
 if TYPE_CHECKING:
     from typing import Any
+
+    from cwl_utils.parser import Process
 
 
 def test_missing_preserved_metadata_is_reported(

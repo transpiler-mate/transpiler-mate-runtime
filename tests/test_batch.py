@@ -52,9 +52,7 @@ class Options(BaseModel):
     count: int = Field(alias="number")
 
 
-def test_order_models_and_shared_context(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_order_models_and_shared_context(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     plan = tmp_path / "tmom.yaml"
     plan.write_text('second:\n  - number: "2"\n  - count: 3\nfirst:\n  - number: 4\n')
     context = TranspilerContext.model_construct()
@@ -70,9 +68,7 @@ def test_order_models_and_shared_context(
         return execute
 
     plugins = {name: plugin(name) for name in ("first", "second")}
-    monkeypatch.setattr(
-        "transpiler_mate.plugins.batch.load_plugin_by_name", plugins.__getitem__
-    )
+    monkeypatch.setattr("transpiler_mate.plugins.batch.load_plugin_by_name", plugins.__getitem__)
     monkeypatch.chdir(tmp_path)
     batch.execute(context, BatchOption())
     assert calls == [("second", 2), ("second", 3), ("first", 4)]
@@ -107,14 +103,10 @@ def test_invalid_plan_before_loading(
 
 def test_missing_file(tmp_path: Path) -> None:
     with pytest.raises(PluginExecutionError, match="Unable to read"):
-        batch.execute(
-            TranspilerContext.model_construct(), BatchOption(file=tmp_path / "missing")
-        )
+        batch.execute(TranspilerContext.model_construct(), BatchOption(file=tmp_path / "missing"))
 
 
-@pytest.mark.parametrize(
-    "failure", [PluginFailureError("failed"), PluginExecutionError("broken")]
-)
+@pytest.mark.parametrize("failure", [PluginFailureError("failed"), PluginExecutionError("broken")])
 def test_stops_on_failure(
     failure: Exception, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -137,9 +129,7 @@ def test_cli_file_option() -> None:
 
 
 @pytest.mark.parametrize("kind", ["unknown", "options", "recursive"])
-def test_invalid_execution(
-    kind: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_invalid_execution(kind: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     plan = tmp_path / "plan.yaml"
     plan.write_text("foo: [{}]")
     loader = Mock(return_value=Mock(options_model=Options))

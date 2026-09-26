@@ -16,11 +16,10 @@ from __future__ import annotations
 
 from io import StringIO
 from pathlib import Path
-from typing import TextIO
+from typing import TYPE_CHECKING, TextIO
 
 import pytest
 from cwl_loader import load_cwl_from_string_content
-from cwl_utils.parser import Process
 from cwl_utils.parser.cwl_v1_2 import Workflow
 from ruamel.yaml import YAML
 from transpiler_mate.api import (
@@ -30,6 +29,9 @@ from transpiler_mate.api import (
 )
 
 from transpiler_mate.plugins.bundle import BundleOption, bundle
+
+if TYPE_CHECKING:
+    from cwl_utils.parser import Process
 
 
 def _context(document: Process | tuple[Process, ...]) -> TranspilerContext:
@@ -110,6 +112,7 @@ $graph:
   steps: []
 """
     )
+    assert isinstance(process, Workflow)
     output = tmp_path / "bundle.cwl"
 
     bundle.execute(_context(process), BundleOption(output=output))
@@ -120,7 +123,9 @@ $graph:
     assert document["$namespaces"] == {"s": "https://schema.org/"}
     assert document["s:name"] == "Bundle regression"
     assert [p["id"] for p in document["$graph"]] == ["main"]
-    assert load_cwl_from_string_content(serialized).id == "main"
+    reloaded = load_cwl_from_string_content(serialized)
+    assert isinstance(reloaded, Workflow)
+    assert reloaded.id == "main"
 
 
 def test_bundle_reports_serialization_failure(

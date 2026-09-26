@@ -66,9 +66,7 @@ class PluginNotFoundError(PluginLoaderError):
     def __init__(self, name: str, group: str) -> None:
         self.name = name
         self.group = group
-        super().__init__(
-            f"No plugin named {name!r} is registered in entry-point group {group!r}"
-        )
+        super().__init__(f"No plugin named {name!r} is registered in entry-point group {group!r}")
 
 
 class PluginLoadError(PluginLoaderError):
@@ -76,9 +74,7 @@ class PluginLoadError(PluginLoaderError):
 
     def __init__(self, entry_point: EntryPoint) -> None:
         self.entry_point = entry_point
-        super().__init__(
-            f"Unable to load plugin {entry_point.name!r} from {entry_point.value!r}"
-        )
+        super().__init__(f"Unable to load plugin {entry_point.name!r} from {entry_point.value!r}")
 
 
 class InvalidPluginError(PluginLoaderError):
@@ -183,10 +179,7 @@ def load_plugins(
 ) -> dict[str, TranspilerPlugin[Any]]:
     """Discover and load every installed plugin in the selected group."""
 
-    return {
-        name: load_plugin(entry_point)
-        for name, entry_point in discover_plugins(group).items()
-    }
+    return {name: load_plugin(entry_point) for name, entry_point in discover_plugins(group).items()}
 
 
 __all__ = [

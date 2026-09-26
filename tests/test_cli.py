@@ -15,13 +15,12 @@
 from __future__ import annotations
 
 from enum import Enum
-from importlib.metadata import EntryPoint
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 import pytest
+from click import UsageError
 from click.testing import CliRunner
-from cwl_utils.parser import Process
 from cwl_utils.parser.cwl_v1_2 import Workflow
 from loguru import logger
 from pydantic import AnyUrl, BaseModel, Field
@@ -36,6 +35,9 @@ from transpiler_mate.api import (
 from transpiler_mate.runtime import cli, context_resolver
 
 if TYPE_CHECKING:
+    from importlib.metadata import EntryPoint
+
+    from cwl_utils.parser import Process
     from transpiler_mate.api import TranspilerPlugin
 
 
@@ -179,7 +181,8 @@ def test_plugin_command_builds_options_and_context() -> None:
     received_context, options = calls[0]
     assert received_context.source == AnyUrl(Path("workflow.cwl").absolute().as_uri())
     assert options.output == Path("result.json")
-    assert options.retries == 3
+    expected_retries = 3
+    assert options.retries == expected_retries
     assert options.verbose is True
     assert options.tags == ["alpha", "beta"]
     assert options.mode is Mode.FAST
@@ -222,7 +225,7 @@ def test_plugin_command_reports_pydantic_validation_errors() -> None:
         ["--output", "result.json", "--retries", "-1", "workflow.cwl"],
     )
 
-    assert result.exit_code == 2
+    assert result.exit_code == UsageError.exit_code
     assert "Invalid plugin options" in result.output
     assert "retries" in result.output
     assert calls == []
@@ -261,9 +264,7 @@ def test_plugin_failure_error_logs_failure_and_exits_one() -> None:
 
     assert result.exit_code == 1
     assert "FAILURE" in logs
-    assert (
-        "Plugin 'failing' failed to produce expected results: expected failure" in logs
-    )
+    assert "Plugin 'failing' failed to produce expected results: expected failure" in logs
     assert "Traceback (most recent call last)" not in logs
     assert "Total time:" in logs
     assert "Finished at:" in logs

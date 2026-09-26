@@ -49,12 +49,11 @@ class DefaultTranspilerContextResolver(TranspilerContextResolver):
     ) -> None:
         self._session = Session()
 
-        http_adapter = (
-            BearerAuthHTTPAdapter(oauth2_bearer) if oauth2_bearer else HTTPAdapter()
-        )
+        http_adapter = BearerAuthHTTPAdapter(oauth2_bearer) if oauth2_bearer else HTTPAdapter()
         self._mount_session("http://", http_adapter)
         self._mount_session("https://", http_adapter)
-        self._mount_session("file://", FileAdapter())
+        # Upstream FileAdapter.__init__ has no annotations; its constructor takes no arguments.
+        self._mount_session("file://", FileAdapter())  # type: ignore[no-untyped-call]
         self._mount_session(
             "oci://",
             OCIAdapter(
@@ -67,9 +66,7 @@ class DefaultTranspilerContextResolver(TranspilerContextResolver):
     def _mount_session(self, scheme: str, adapter: BaseAdapter) -> None:
         logger.debug(f"Mounting '{scheme}' scheme to '{type(adapter).__name__}'...")
         self._session.mount(scheme, adapter)
-        logger.debug(
-            f"Scheme '{scheme}' successfully mount to '{type(adapter).__name__}'"
-        )
+        logger.debug(f"Scheme '{scheme}' successfully mount to '{type(adapter).__name__}'")
 
     def resolve(self, location: str) -> TranspilerContext:
         location_source, separator, process_id = location.partition("#")
@@ -88,9 +85,7 @@ class DefaultTranspilerContextResolver(TranspilerContextResolver):
                 path=location_source, session=self._session
             )
 
-            metadata: SoftwareApplication = software_application_from_process(
-                cwl_document
-            )
+            metadata: SoftwareApplication = software_application_from_process(cwl_document)
 
             return TranspilerContext(
                 source=source,

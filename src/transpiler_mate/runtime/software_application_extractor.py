@@ -103,7 +103,7 @@ def software_application_from_process(
     compacted = jsonld.compact(
         input_=metadata,
         ctx={},
-        options={"expandContext": namespaces},
+        options={"expandContext": namespaces} if namespaces is not None else {},
     )
 
     return SoftwareApplication.model_validate(

@@ -32,7 +32,7 @@ from datetime import datetime
 from enum import Enum
 from importlib.metadata import version
 from pathlib import Path
-from typing import TYPE_CHECKING, Annotated, Any, Literal, Union, get_args, get_origin
+from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, get_args, get_origin
 
 import click
 from click.core import ParameterSource
@@ -53,14 +53,17 @@ from .plugin_loader import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
     from importlib.metadata import EntryPoint
 
     from click.core import Parameter
+    from pydantic import BaseModel
     from transpiler_mate.api import TranspilerPlugin
 
-_EXECUTION_SEPARATOR = (
-    "------------------------------------------------------------------------"
-)
+_Options = TypeVar("_Options", bound="BaseModel")
+_VARIADIC_TUPLE_ARGUMENT_COUNT = 2
+
+_EXECUTION_SEPARATOR = "------------------------------------------------------------------------"
 
 
 class PydanticParamType(click.ParamType[Any]):
@@ -251,88 +254,18 @@ def plugin_to_click_command(
     @click.pass_context
     def invoke_plugin(ctx: click.Context, /, **values: Any) -> None:
         source: str = values.pop("_runtime_source")
-        oci_hostname: str | None = values.pop("_runtime_oci_hostname")
-        oci_username: str | None = values.pop("_runtime_oci_username")
-        oci_password: str | None = values.pop("_runtime_oci_password")
-        oauth2_bearer: str | None = values.pop("_runtime_oauth2_bearer")
-
-        model_values: dict[str, Any] = {}
-
-        for field_name, field in options_model.model_fields.items():
-            parameter_source = ctx.get_parameter_source(field_name)
-
-            if not field.is_required() and parameter_source is ParameterSource.DEFAULT:
-                continue
-
-            model_values[field_name] = values[field_name]
-
-        try:
-            options = options_model.model_validate(
-                model_values,
-                by_alias=True,
-                by_name=True,
+        runtime_values = {
+            name: values.pop(name)
+            for name in (
+                "_runtime_oci_hostname",
+                "_runtime_oci_username",
+                "_runtime_oci_password",
+                "_runtime_oauth2_bearer",
             )
-        except ValidationError as exc:
-            raise click.UsageError(
-                _format_validation_error(exc),
-                ctx=ctx,
-            ) from exc
-        logger.info(f"""
-━┏┛┏━┃┏━┃┏━ ┏━┛┏━┃┛┃  ┏━┛┏━┃  ┏┏ ┏━┃━┏┛┏━┛
- ┃ ┏┏┛┏━┃┃ ┃━━┃┏━┛┃┃  ┏━┛┏┏┛  ┃┃┃┏━┃ ┃ ┏━┛
- ┛ ┛ ┛┛ ┛┛ ┛━━┛┛  ┛━━┛━━┛┛ ┛  ┛┛┛┛ ┛ ┛ ━━┛
+        }
 
- v{version("transpiler-mate-runtime")} by Terradue srl
- info[at]terradue[dot]com
-""")
-        start_time = time.time()
-        logger.info(
-            "Started at: {}",
-            time_to_string(start_time),
-        )
-
-        try:
-            context: TranspilerContext = DefaultTranspilerContextResolver(
-                oci_hostname=oci_hostname,
-                oci_username=oci_username,
-                oci_password=oci_password,
-                oauth2_bearer=oauth2_bearer,
-            ).resolve(location=source)
-
-            plugin.execute(context, options)
-        except PluginFailureError as exc:
-            logger.error(_EXECUTION_SEPARATOR)
-            logger.error("FAILURE")
-            logger.error(
-                "Plugin '{}' failed to produce expected results: {}",
-                plugin.name,
-                exc,
-            )
-            logger.error(_EXECUTION_SEPARATOR)
-            ctx.exit(1)
-        except PluginExecutionError as exc:
-            logger.error(_EXECUTION_SEPARATOR)
-            logger.error("ERROR")
-            logger.exception(
-                "Plugin '{}' execution failed unexpectedly: {}",
-                plugin.name,
-                exc,
-            )
-            logger.error(_EXECUTION_SEPARATOR)
-            ctx.exit(1)
-        except PluginError as exc:
-            raise click.ClickException(str(exc)) from exc
-        else:
-            logger.success(_EXECUTION_SEPARATOR)
-            logger.success("SUCCESS")
-            logger.success(_EXECUTION_SEPARATOR)
-        finally:
-            end_time = time.time()
-            logger.info("Total time: {:.4f} seconds", end_time - start_time)
-            logger.info(
-                "Finished at: {}",
-                time_to_string(end_time),
-            )
+        options = _validate_cli_options(ctx, options_model, values)
+        _execute_cli_plugin(ctx, plugin, options, source, runtime_values)
 
     return click.Command(
         name=plugin.name,
@@ -340,6 +273,110 @@ def plugin_to_click_command(
         params=params,
         callback=invoke_plugin,
     )
+
+
+def _validate_cli_options(
+    ctx: click.Context,
+    options_model: type[_Options],
+    values: Mapping[str, object],
+) -> _Options:
+    """Validate supplied options while preserving Pydantic defaults.
+
+    Raises:
+        click.UsageError: If supplied options fail model validation.
+    """
+    model_values: dict[str, object] = {}
+
+    for field_name, field in options_model.model_fields.items():
+        parameter_source = ctx.get_parameter_source(field_name)
+
+        if not field.is_required() and parameter_source is ParameterSource.DEFAULT:
+            continue
+
+        model_values[field_name] = values[field_name]
+
+    try:
+        return options_model.model_validate(
+            model_values,
+            by_alias=True,
+            by_name=True,
+        )
+    except ValidationError as exc:
+        raise click.UsageError(
+            _format_validation_error(exc),
+            ctx=ctx,
+        ) from exc
+
+
+def _execute_cli_plugin(
+    ctx: click.Context,
+    plugin: TranspilerPlugin[_Options],
+    options: _Options,
+    source: str,
+    runtime_values: Mapping[str, str | None],
+) -> None:
+    """Resolve the source and execute a plugin with timing and outcome logs.
+
+    Raises:
+        click.ClickException: If the plugin raises a generic plugin error.
+        click.exceptions.Exit: If execution fails, with exit status one.
+    """
+    logger.info(f"""
+━┏┛┏━┃┏━┃┏━ ┏━┛┏━┃┛┃  ┏━┛┏━┃  ┏┏ ┏━┃━┏┛┏━┛
+ ┃ ┏┏┛┏━┃┃ ┃━━┃┏━┛┃┃  ┏━┛┏┏┛  ┃┃┃┏━┃ ┃ ┏━┛
+ ┛ ┛ ┛┛ ┛┛ ┛━━┛┛  ┛━━┛━━┛┛ ┛  ┛┛┛┛ ┛ ┛ ━━┛
+
+ v{version("transpiler-mate-runtime")} by Terradue srl
+ info[at]terradue[dot]com
+""")
+    start_time = time.time()
+    logger.info(
+        "Started at: {}",
+        time_to_string(start_time),
+    )
+
+    try:
+        context: TranspilerContext = DefaultTranspilerContextResolver(
+            oci_hostname=runtime_values["_runtime_oci_hostname"],
+            oci_username=runtime_values["_runtime_oci_username"],
+            oci_password=runtime_values["_runtime_oci_password"],
+            oauth2_bearer=runtime_values["_runtime_oauth2_bearer"],
+        ).resolve(location=source)
+
+        plugin.execute(context, options)
+    except PluginFailureError as exc:
+        logger.error(_EXECUTION_SEPARATOR)
+        logger.error("FAILURE")
+        logger.error(
+            "Plugin '{}' failed to produce expected results: {}",
+            plugin.name,
+            exc,
+        )
+        logger.error(_EXECUTION_SEPARATOR)
+        ctx.exit(1)
+    except PluginExecutionError as exc:
+        logger.error(_EXECUTION_SEPARATOR)
+        logger.error("ERROR")
+        logger.exception(
+            "Plugin '{}' execution failed unexpectedly: {}",
+            plugin.name,
+            exc,
+        )
+        logger.error(_EXECUTION_SEPARATOR)
+        ctx.exit(1)
+    except PluginError as exc:
+        raise click.ClickException(str(exc)) from exc
+    else:
+        logger.success(_EXECUTION_SEPARATOR)
+        logger.success("SUCCESS")
+        logger.success(_EXECUTION_SEPARATOR)
+    finally:
+        end_time = time.time()
+        logger.info("Total time: {:.4f} seconds", end_time - start_time)
+        logger.info(
+            "Finished at: {}",
+            time_to_string(end_time),
+        )
 
 
 def field_to_click_option(
@@ -382,7 +419,7 @@ def _click_type_and_cardinality(
     args = get_args(annotation)
 
     if origin is tuple:
-        if len(args) == 2 and args[1] is Ellipsis:
+        if len(args) == _VARIADIC_TUPLE_ARGUMENT_COUNT and args[1] is Ellipsis:
             return _click_type(args[0]), True
 
         if args:
@@ -399,14 +436,9 @@ def _click_type(annotation: Any) -> click.ParamType[Any] | type[Any]:
     annotation = _strip_optional(_unwrap_annotated(annotation))
     origin = get_origin(annotation)
 
-    if annotation is str:
-        return click.STRING
-    if annotation is int:
-        return click.INT
-    if annotation is float:
-        return click.FLOAT
-    if annotation is bool:
-        return click.BOOL
+    scalar_types = {str: click.STRING, int: click.INT, float: click.FLOAT, bool: click.BOOL}
+    if annotation in scalar_types:
+        return scalar_types[annotation]
     if annotation is Path:
         return click.Path(path_type=Path)
 
@@ -423,15 +455,8 @@ def _click_default(
     field: Any,
     annotation: Any,
 ) -> tuple[Any, bool]:
-    if field.is_required():
-        if _is_multiple(annotation):
-            return (), False
-        return None, False
-
-    if field.default_factory is not None:
-        if _is_multiple(annotation):
-            return (), False
-        return None, False
+    if field.is_required() or field.default_factory is not None:
+        return (() if _is_multiple(annotation) else None), False
 
     default = field.default
 
@@ -452,7 +477,7 @@ def _is_multiple(annotation: Any) -> bool:
     if origin in {list, set, frozenset, Sequence}:
         return True
 
-    return origin is tuple and len(args) == 2 and args[1] is Ellipsis
+    return origin is tuple and len(args) == _VARIADIC_TUPLE_ARGUMENT_COUNT and args[1] is Ellipsis
 
 
 def _strip_optional(annotation: Any) -> Any:
