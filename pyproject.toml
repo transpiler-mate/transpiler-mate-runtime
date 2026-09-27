@@ -51,7 +51,7 @@ dependencies = [
   "pydantic>=2.13.4,<3",
   "PyLD>=3.1.0",
   "session-adapters>=0.5.0",
-  "transpiler-mate-api>=1.0.0",
+  "transpiler-mate-api>=1.0.1",
 ]
 
 # ---------------------------------------------------------------------------
