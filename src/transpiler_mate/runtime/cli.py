@@ -197,7 +197,10 @@ class PluginGroup(click.Group):
                 f"{plugin.name!r}; the entry-point name and plugin.name must match"
             )
 
-        command = plugin_to_click_command(plugin)
+        command = plugin_to_click_command(
+            plugin,
+            plugin_version=entry_point.dist.version if entry_point.dist else "unknown",
+        )
         self._plugin_commands[cmd_name] = command
         return command
 
@@ -239,8 +242,16 @@ def _runtime_click_parameters() -> list[Parameter]:
 
 def plugin_to_click_command(
     plugin: TranspilerPlugin[Any],
+    *,
+    plugin_version: str = "unknown",
 ) -> click.Command:
-    """Translate one loaded plugin into a Click command."""
+    """Translate one loaded plugin into a Click command.
+
+    Args:
+        plugin: Loaded plugin to expose.
+        plugin_version: Installed distribution version used in execution logs,
+            or ``unknown`` when distribution metadata is unavailable.
+    """
 
     options_model = plugin.options_model
     params: list[Parameter] = [
@@ -265,7 +276,7 @@ def plugin_to_click_command(
         }
 
         options = _validate_cli_options(ctx, options_model, values)
-        _execute_cli_plugin(ctx, plugin, options, source, runtime_values)
+        _execute_cli_plugin(ctx, plugin, options, source, runtime_values, plugin_version)
 
     return click.Command(
         name=plugin.name,
@@ -314,6 +325,7 @@ def _execute_cli_plugin(
     options: _Options,
     source: str,
     runtime_values: Mapping[str, str | None],
+    plugin_version: str,
 ) -> None:
     """Resolve the source and execute a plugin with timing and outcome logs.
 
@@ -342,6 +354,8 @@ def _execute_cli_plugin(
             oci_password=runtime_values["_runtime_oci_password"],
             oauth2_bearer=runtime_values["_runtime_oauth2_bearer"],
         ).resolve(location=source)
+
+        logger.info("Executing plugin '{}' version {}", plugin.name, plugin_version)
 
         plugin.execute(context, options)
     except PluginFailureError as exc:

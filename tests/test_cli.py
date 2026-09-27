@@ -58,6 +58,7 @@ class FakeEntryPoint:
     def __init__(self, name: str = "demo") -> None:
         self.name = name
         self.value = "example:plugin"
+        self.dist = None
 
 
 class FakeSession:
@@ -195,7 +196,7 @@ def test_plugin_command_logs_successful_execution() -> None:
         messages.append(str(message))
 
     calls: list[tuple[TranspilerContext, ExampleOptions]] = []
-    command = cli.plugin_to_click_command(_recording_plugin(calls))
+    command = cli.plugin_to_click_command(_recording_plugin(calls), plugin_version="1.2.3")
     sink_id = logger.add(collect_log, format="{message}")
 
     try:
@@ -209,6 +210,7 @@ def test_plugin_command_logs_successful_execution() -> None:
     logs = "".join(messages)
 
     assert result.exit_code == 0, result.output
+    assert "Executing plugin 'demo' version 1.2.3" in logs
     assert "Started at:" in logs
     assert "SUCCESS" in logs
     assert "Total time:" in logs

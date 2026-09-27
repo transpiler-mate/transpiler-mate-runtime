@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.1] - 2026-09-27
 
+### Added
+
+- Each plugin execution prints the installed plugin version. 
+
 ### Changed
 
 - Improve type annotations and internal code quality by addressing mypy, Ruff, and Bandit findings, without changing public APIs or runtime behavior.
