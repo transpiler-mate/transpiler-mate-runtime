@@ -59,9 +59,9 @@ dependencies = [
 # ---------------------------------------------------------------------------
 
 [project.urls]
-Documentation = "https://terradue.github.io/transpiler-mate-runtime/"
-Issues = "https://github.com/Terradue/transpiler-mate-runtime/issues"
-Source = "https://github.com/Terradue/transpiler-mate-runtime"
+Documentation = "https://Transpiler-Mate.github.io/transpiler-mate-runtime/"
+Issues = "https://github.com/Transpiler-Mate/transpiler-mate-runtime/issues"
+Source = "https://github.com/Transpiler-Mate/transpiler-mate-runtime"
 Changelog = "https://github.com/Transpiler-Mate/transpiler-mate-runtime/blob/main/CHANGELOG.md"
 
 [project.scripts]
