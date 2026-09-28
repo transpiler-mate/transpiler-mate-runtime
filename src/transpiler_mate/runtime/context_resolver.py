@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Resolve CWL documents and configure authenticated transport adapters."""
+
+import json
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -22,8 +25,9 @@ from pydantic import AnyUrl
 from requests import Session
 from requests.adapters import BaseAdapter, HTTPAdapter
 from session_adapters.bearer_auth_http_adapter import BearerAuthHTTPAdapter
+from session_adapters.conainers_auth import ContainersAuth
 from session_adapters.file_adapter import FileAdapter
-from session_adapters.oci_adapter import OCIAdapter
+from session_adapters.oci_adapter import OCIAdapter, add_auth
 from transpiler_mate.api import (
     PluginExecutionError,
     PluginFailureError,
@@ -38,6 +42,29 @@ if TYPE_CHECKING:
     from transpiler_mate.api import SoftwareApplication
 
 
+def read_authfile(path: Path) -> ContainersAuth:
+    """Load registry credentials from a JSON file.
+
+    An empty object produces an empty credential set.
+
+    Raises:
+        PluginExecutionError: If the JSON document is not an object.
+        OSError: If the file cannot be read.
+        ValueError: If the JSON or credential structure is invalid.
+    """
+    with path.open(encoding="utf-8") as stream:
+        document = json.load(stream)
+
+    if not isinstance(document, dict):
+        raise PluginExecutionError(f"Auth file {path.absolute()} must contain a JSON object")
+
+    # An empty config_dict otherwise triggers automatic file discovery.
+    if not document:
+        return ContainersAuth(auths={})
+
+    return ContainersAuth.model_validate(document, by_alias=True)
+
+
 class DefaultTranspilerContextResolver(TranspilerContextResolver):
     def __init__(
         self,
@@ -45,6 +72,7 @@ class DefaultTranspilerContextResolver(TranspilerContextResolver):
         oci_hostname: str | None = None,
         oci_username: str | None = None,
         oci_password: str | None = None,
+        authfile: str | None = None,
         oauth2_bearer: str | None = None,
     ) -> None:
         self._session = Session()
@@ -52,16 +80,15 @@ class DefaultTranspilerContextResolver(TranspilerContextResolver):
         http_adapter = BearerAuthHTTPAdapter(oauth2_bearer) if oauth2_bearer else HTTPAdapter()
         self._mount_session("http://", http_adapter)
         self._mount_session("https://", http_adapter)
-        # Upstream FileAdapter.__init__ has no annotations; its constructor takes no arguments.
-        self._mount_session("file://", FileAdapter())  # type: ignore[no-untyped-call]
-        self._mount_session(
-            "oci://",
-            OCIAdapter(
-                hostname=oci_hostname,
-                username=oci_username,
-                password=oci_password,
-            ),
+        self._mount_session("file://", FileAdapter())
+
+        # OCI containers auth
+        containers_auth: ContainersAuth = (
+            read_authfile(Path(authfile)) if authfile else ContainersAuth(auths={})
         )
+        if oci_hostname and oci_username and oci_password:
+            add_auth(oci_hostname, oci_username, oci_password, containers_auth)
+        self._mount_session("oci://", OCIAdapter(containers_auth))
 
     def _mount_session(self, scheme: str, adapter: BaseAdapter) -> None:
         logger.debug(f"Mounting '{scheme}' scheme to '{type(adapter).__name__}'...")

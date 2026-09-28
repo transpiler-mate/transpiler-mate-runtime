@@ -233,6 +233,12 @@ def _runtime_click_parameters() -> list[Parameter]:
             show_envvar=True,
         ),
         click.Option(
+            ["--authfile", "_authfile"],
+            help="Path of the managed registry credentials file.",
+            required=False,
+            type=click.Path(dir_okay=False, readable=True, path_type=Path),
+        ),
+        click.Option(
             ["--oauth2-bearer", "_runtime_oauth2_bearer"],
             envvar="OAUTH2_BEARER",
             show_envvar=True,
@@ -271,6 +277,7 @@ def plugin_to_click_command(
                 "_runtime_oci_hostname",
                 "_runtime_oci_username",
                 "_runtime_oci_password",
+                "_authfile",
                 "_runtime_oauth2_bearer",
             )
         }
@@ -352,6 +359,7 @@ def _execute_cli_plugin(
             oci_hostname=runtime_values["_runtime_oci_hostname"],
             oci_username=runtime_values["_runtime_oci_username"],
             oci_password=runtime_values["_runtime_oci_password"],
+            authfile=runtime_values["_authfile"],
             oauth2_bearer=runtime_values["_runtime_oauth2_bearer"],
         ).resolve(location=source)
 
