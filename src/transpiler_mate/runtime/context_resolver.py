@@ -27,7 +27,7 @@ from requests.adapters import BaseAdapter, HTTPAdapter
 from session_adapters.bearer_auth_http_adapter import BearerAuthHTTPAdapter
 from session_adapters.conainers_auth import ContainersAuth
 from session_adapters.file_adapter import FileAdapter
-from session_adapters.oci_adapter import OCIAdapter, add_auth
+from session_adapters.oci_adapter import OCIAdapter
 from transpiler_mate.api import (
     PluginExecutionError,
     PluginFailureError,
@@ -40,29 +40,6 @@ from .software_application_extractor import software_application_from_process
 if TYPE_CHECKING:
     from cwl_utils.parser import Process
     from transpiler_mate.api import SoftwareApplication
-
-
-def read_authfile(path: Path) -> ContainersAuth:
-    """Load registry credentials from a JSON file.
-
-    An empty object produces an empty credential set.
-
-    Raises:
-        PluginExecutionError: If the JSON document is not an object.
-        OSError: If the file cannot be read.
-        ValueError: If the JSON or credential structure is invalid.
-    """
-    with path.open(encoding="utf-8") as stream:
-        document = json.load(stream)
-
-    if not isinstance(document, dict):
-        raise PluginExecutionError(f"Auth file {path.absolute()} must contain a JSON object")
-
-    # An empty config_dict otherwise triggers automatic file discovery.
-    if not document:
-        return ContainersAuth(auths={})
-
-    return ContainersAuth.model_validate(document, by_alias=True)
 
 
 class DefaultTranspilerContextResolver(TranspilerContextResolver):
@@ -84,10 +61,10 @@ class DefaultTranspilerContextResolver(TranspilerContextResolver):
 
         # OCI containers auth
         containers_auth: ContainersAuth = (
-            read_authfile(Path(authfile)) if authfile else ContainersAuth(auths={})
+            ContainersAuth.get_instance(Path(authfile)) if authfile else ContainersAuth(auths={})
         )
         if oci_hostname and oci_username and oci_password:
-            add_auth(oci_hostname, oci_username, oci_password, containers_auth)
+            containers_auth.add_auth(oci_hostname, oci_username, oci_password)
         self._mount_session("oci://", OCIAdapter(containers_auth))
 
     def _mount_session(self, scheme: str, adapter: BaseAdapter) -> None:
