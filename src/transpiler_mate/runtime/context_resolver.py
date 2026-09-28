@@ -14,7 +14,6 @@
 
 """Resolve CWL documents and configure authenticated transport adapters."""
 
-import json
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -59,10 +58,13 @@ class DefaultTranspilerContextResolver(TranspilerContextResolver):
         self._mount_session("https://", http_adapter)
         self._mount_session("file://", FileAdapter())
 
-        # OCI containers auth
-        containers_auth: ContainersAuth = (
-            ContainersAuth.get_instance(Path(authfile)) if authfile else ContainersAuth(auths={})
+        authfile_path = Path(authfile) if authfile else None
+        containers_auth = (
+            ContainersAuth.get_instance(authfile_path)
+            if authfile_path is not None and authfile_path.exists()
+            else ContainersAuth(auths={})
         )
+
         if oci_hostname and oci_username and oci_password:
             containers_auth.add_auth(oci_hostname, oci_username, oci_password)
         self._mount_session("oci://", OCIAdapter(containers_auth))

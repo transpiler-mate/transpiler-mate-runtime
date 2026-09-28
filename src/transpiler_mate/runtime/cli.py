@@ -25,8 +25,8 @@ Each plugin command owns runtime input/session setup and constructs its
 from __future__ import annotations
 
 import json
-import sys
 import os
+import sys
 import time
 import types
 from collections.abc import Sequence
@@ -254,7 +254,7 @@ def _runtime_click_parameters() -> list[Parameter]:
             default=_default_authfile(),
             show_default=True,
             required=False,
-            type=click.Path(dir_okay=False, readable=True, path_type=Path),
+            type=click.STRING,
         ),
         click.Option(
             ["--oauth2-bearer", "_runtime_oauth2_bearer"],
