@@ -31,6 +31,7 @@ Every plugin command receives these runtime options:
 | `--oci-hostname` | `OCI_HOSTNAME` | OCI registry hostname |
 | `--oci-username` | `OCI_USERNAME` | OCI username |
 | `--oci-password` | `OCI_PASSWORD` | OCI password |
+| `--authfile` | — | Path to a containers-auth.json registry credentials file |
 | `--oauth2-bearer` | `OAUTH2_BEARER` | Bearer token for HTTP and HTTPS |
 
 Plugin-specific options follow the plugin's Pydantic `options_model`.

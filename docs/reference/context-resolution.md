@@ -10,6 +10,7 @@ DefaultTranspilerContextResolver(
     oci_hostname: str | None = None,
     oci_username: str | None = None,
     oci_password: str | None = None,
+    authfile: str | None = None,
     oauth2_bearer: str | None = None,
 )
 ```
@@ -21,7 +22,13 @@ It creates a `requests.Session` and mounts adapters as follows:
 | `http://` | `HTTPAdapter`, or `BearerAuthHTTPAdapter` when a token is supplied |
 | `https://` | `HTTPAdapter`, or `BearerAuthHTTPAdapter` when a token is supplied |
 | `file://` | `FileAdapter` |
-| `oci://` | `OCIAdapter` configured with the supplied hostname and credentials |
+| `oci://` | `OCIAdapter` configured with credentials loaded from `authfile` and any supplied registry credentials |
+
+Pass `authfile` to load a registry credentials JSON file. Without it, the runtime
+starts with an empty credential set. If `oci_hostname`, `oci_username`, and
+`oci_password` are all supplied, those credentials are added to that set.
+See [Authenticate to OCI](../how-to/access-remote-sources.md#authenticate-to-oci)
+for command-line examples.
 
 ## `resolve(location)`
 
