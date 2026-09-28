@@ -19,6 +19,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.3.0] - 2026-09-28
+
+### Changed
+
+- dynamic resolution of the `authfile` according to the requirements below:
+    - on Linux, the default is `${XDG_RUNTIME_DIR}/containers/auth.json`;
+    - the default value of this option is read from the `REGISTRY_AUTH_FILE` environment variable.
+
+Refs: https://github.com/podman-container-tools/skopeo/blob/main/docs/skopeo-login.1.md
+Refs: https://man.archlinux.org/man/containers-auth.json.5
+
 ## [1.2.0] - 2026-09-28
 
 ### Added
@@ -61,7 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[unreleased]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.1...v1.1.1
 [1.1.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.1...v1.1.0
