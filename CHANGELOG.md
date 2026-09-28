@@ -19,6 +19,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.2.0] - 2026-09-28
+
+### Added
+
+- Support for registry credentials files in the [containers-auth.json format](https://man.archlinux.org/man/containers-auth.json.5) through the `--authfile` option and the context resolver's `authfile` argument.
+
+### Changed
+
+- Require `session-adapters>=0.6.0` for OCI authentication using the shared credentials model.
+
+### Fixed
+
+- Update OCI adapter test mocks for the credentials model and resolve type-checking, import-order, and formatting errors.
+
 ## [1.1.1] - 2026-09-27
 
 ### Added
@@ -47,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[unreleased]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.1.1...HEAD
+[unreleased]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.1...v1.1.1
 [1.1.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.0...v1.0.1

@@ -38,6 +38,7 @@ if TYPE_CHECKING:
     from importlib.metadata import EntryPoint
 
     from cwl_utils.parser import Process
+    from session_adapters.conainers_auth import ContainersAuth
     from transpiler_mate.api import TranspilerPlugin
 
 
@@ -77,13 +78,8 @@ def _runtime_context_dependencies(monkeypatch: pytest.MonkeyPatch) -> None:
     def adapter() -> object:
         return object()
 
-    def oci_adapter(
-        *,
-        hostname: str | None,
-        username: str | None,
-        password: str | None,
-    ) -> object:
-        del hostname, username, password
+    def oci_adapter(containers_auth: ContainersAuth) -> object:
+        assert containers_auth.auths == {}
         return object()
 
     def is_url(*, path_or_url: str, session: object) -> bool:
@@ -382,13 +378,8 @@ def test_plugin_builds_context_and_passes_it_to_plugin(
     def adapter() -> object:
         return object()
 
-    def oci_adapter(
-        *,
-        hostname: str | None,
-        username: str | None,
-        password: str | None,
-    ) -> object:
-        del hostname, username, password
+    def oci_adapter(containers_auth: ContainersAuth) -> object:
+        assert containers_auth.auths == {}
         return object()
 
     def is_url(*, path_or_url: str, session: object) -> bool:

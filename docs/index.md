@@ -5,6 +5,13 @@ Workflow Language (CWL) documents. It provides the `transpiler-mate` command,
 turns plugin option models into command-line options, resolves local and remote
 CWL sources, and supplies a built-in `bundle` plugin.
 
+!!! warning "Available from version 1.2.0: registry credentials files"
+
+    Support for the
+    [containers-auth.json format](https://man.archlinux.org/man/containers-auth.json.5)
+    is available from **1.2.0**. Use `--authfile` to select a credentials file
+    when accessing OCI sources. See [Authenticate to OCI](how-to/access-remote-sources.md#authenticate-to-oci).
+
 !!! tip "New in version 1.1.0: batch plugin"
 
     Run multiple plugins sequentially with the same CWL context using the
