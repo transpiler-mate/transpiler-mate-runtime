@@ -25,6 +25,8 @@ Each plugin command owns runtime input/session setup and constructs its
 from __future__ import annotations
 
 import json
+import sys
+import os
 import time
 import types
 from collections.abc import Sequence
@@ -209,6 +211,18 @@ def time_to_string(time: float) -> str:
     return datetime.fromtimestamp(time).isoformat(timespec="milliseconds")
 
 
+def _default_authfile() -> Path:
+    # Windows / macOS
+    base_dir = Path.home() / ".config"
+
+    if sys.platform == "linux":
+        runtime_dir = os.environ.get("XDG_RUNTIME_DIR")
+        if runtime_dir:
+            base_dir = Path(runtime_dir)
+
+    return base_dir / "containers" / "auth.json"
+
+
 def _runtime_click_parameters() -> list[Parameter]:
     return [
         click.Argument(
@@ -235,6 +249,10 @@ def _runtime_click_parameters() -> list[Parameter]:
         click.Option(
             ["--authfile", "_authfile"],
             help="Path of the managed registry credentials file.",
+            envvar="REGISTRY_AUTH_FILE",
+            show_envvar=True,
+            default=_default_authfile(),
+            show_default=True,
             required=False,
             type=click.Path(dir_okay=False, readable=True, path_type=Path),
         ),
