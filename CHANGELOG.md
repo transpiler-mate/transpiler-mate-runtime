@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-12
+
 ### Added
+
+- refactored CWL loading failure detailed log
+
+- `cwl-loader` runtime dependency bumped to v0.28.0 due to https://github.com/transpiler-mate/cwl-loader/pull/35
 
 ### Changed
 
@@ -72,10 +78,11 @@ Refs: https://man.archlinux.org/man/containers-auth.json.5
 
 - Initial release.
 
-[unreleased]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.3.0...HEAD
-[1.3.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.2.0...v1.3.0
-[1.2.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.1.1...v1.2.0
-[1.1.1]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.1...v1.1.1
-[1.1.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.1...v1.1.0
-[1.0.1]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/Transpiler-Mate/transpiler-mate-runtime/releases/tag/v1.0.0
+[Unreleased]: https://github.com/sim13pods/transpiler-mate-runtime/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/sim13pods/transpiler-mate-runtime/compare/v1.3.0...v1.3.1
+[1.3.0]: https://github.com/sim13pods/transpiler-mate-runtime/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/sim13pods/transpiler-mate-runtime/compare/v1.1.1...v1.2.0
+[1.1.1]: https://github.com/sim13pods/transpiler-mate-runtime/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/sim13pods/transpiler-mate-runtime/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/sim13pods/transpiler-mate-runtime/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/sim13pods/transpiler-mate-runtime/releases/tag/v1.0.0
