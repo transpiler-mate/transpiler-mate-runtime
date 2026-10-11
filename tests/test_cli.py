@@ -229,7 +229,7 @@ def test_plugin_command_reports_pydantic_validation_errors() -> None:
     assert calls == []
 
 
-def test_plugin_failure_error_logs_failure_and_exits_one() -> None:
+def test_plugin_failure_error_logs_failure_and_traceback_and_exits_one() -> None:
     messages: list[str] = []
 
     def collect_log(message: object) -> None:
@@ -262,8 +262,10 @@ def test_plugin_failure_error_logs_failure_and_exits_one() -> None:
 
     assert result.exit_code == 1
     assert "FAILURE" in logs
-    assert "Plugin 'failing' failed to produce expected results: expected failure" in logs
-    assert "Traceback (most recent call last)" not in logs
+    assert "Plugin 'failing' failed to produce expected results\n" in messages
+    assert any(message.startswith("expected failure\n") for message in messages)
+    assert "Traceback (most recent call last)" in logs
+    assert "PluginFailureError: expected failure" in logs
     assert "Total time:" in logs
     assert "Finished at:" in logs
 
