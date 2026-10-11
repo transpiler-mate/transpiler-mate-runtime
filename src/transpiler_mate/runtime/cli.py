@@ -387,11 +387,8 @@ def _execute_cli_plugin(
     except PluginFailureError as exc:
         logger.error(_EXECUTION_SEPARATOR)
         logger.error("FAILURE")
-        logger.error(
-            "Plugin '{}' failed to produce expected results: {}",
-            plugin.name,
-            exc,
-        )
+        logger.error(f"Plugin '{plugin.name}' failed to produce expected results")
+        logger.exception(exc)
         logger.error(_EXECUTION_SEPARATOR)
         ctx.exit(1)
     except PluginExecutionError as exc:
