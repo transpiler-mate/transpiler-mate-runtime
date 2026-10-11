@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://terradue.github.io/transpiler-mate-runtime/reference/batch-plugin/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Batch plugin - transpiler-mate-runtime</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Batch plugin";
+        var mkdocs_page_input_path = "reference/batch-plugin.md";
+        var mkdocs_page_url = "/transpiler-mate-runtime/reference/batch-plugin/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> transpiler-mate-runtime
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting-started/">Get started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/bundle-a-cwl-document/">Bundle a CWL document</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/select-a-process/">Select a process</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/access-remote-sources/">Access remote sources</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/register-a-plugin/">Register a plugin</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/">Command-line interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../plugin-loading/">Plugin loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../context-resolution/">Context resolution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundle-plugin/">Built-in bundle plugin</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Batch plugin</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#command">Command</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#execution-file">Execution file</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#validation-and-execution">Validation and execution</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#failures-and-debug-logging">Failures and debug logging</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../errors-and-exit-codes/">Errors and exit codes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/">Explanation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/plugin-lifecycle/">Plugin lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/cwl-metadata/">CWL metadata</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">transpiler-mate-runtime</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Batch plugin</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Terradue/transpiler-mate-runtime/edit/master/docs/reference/batch-plugin.md">Edit on Terradue/transpiler-mate-runtime</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="batch-plugin">Batch plugin<a class="headerlink" href="#batch-plugin" title="Permanent link">&para;</a></h1>
+<p>Available since version <strong>1.1.0</strong>, the <code>batch</code> plugin runs multiple plugin
+executions sequentially with the same resolved CWL context. An execution plan
+in YAML specifies the plugins and their inputs.</p>
+<h2 id="command">Command<a class="headerlink" href="#command" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>transpiler-mate batch [OPTIONS] SOURCE
+</code></pre></div>
+<p><code>SOURCE</code> is the CWL document, as with other plugin commands. In addition to the
+<a href="../cli/">shared runtime options</a>, the plugin accepts:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--file PATH</code></td>
+<td>no</td>
+<td><code>tmom.yaml</code></td>
+<td>UTF-8 YAML file describing plugin executions</td>
+</tr>
+</tbody>
+</table>
+<p>The plugin's <code>BatchOption</code> model defines this option; the runtime generates the
+CLI option from the model.</p>
+<h2 id="execution-file">Execution file<a class="headerlink" href="#execution-file" title="Permanent link">&para;</a></h2>
+<p><code>tmom</code> stands for <strong>Transpiler Mate Object Model</strong>.</p>
+<p>Create <code>tmom.yaml</code> in your working directory:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">bundle</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/workflow.cwl</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/copy.cwl</span>
+</code></pre></div>
+<p>Then run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="go">transpiler-mate batch workflow.cwl</span>
+</code></pre></div>
+<p>To use a different execution file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="go">transpiler-mate batch workflow.cwl --file plans/release.yaml</span>
+</code></pre></div>
+<p>The file must contain a mapping with this structure:</p>
+<ul>
+<li>Each key is a nonblank string naming an installed plugin's entry point.</li>
+<li>Each value is an array of executions for that plugin.</li>
+<li>Each execution is an object whose string keys and values supply the target
+  plugin's options model. Use <code>{}</code> when an execution needs only model defaults.</li>
+</ul>
+<p>For multiple plugins, add another key with its own execution array. For example,
+if you have installed a plugin named <code>report</code> with an <code>output</code> option:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">bundle</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/workflow.cwl</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/copy.cwl</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">report</span><span class="p">:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/report.json</span>
+</code></pre></div>
+<p>Both <code>bundle</code> executions finish before <code>report</code> starts. <code>report</code> is an illustrative
+external plugin, not included with this runtime.</p>
+<p>Relative execution-file paths resolve from the working directory. Input values
+are passed to each target model; the batch plugin does not rebase paths relative
+to the YAML file.</p>
+<h2 id="validation-and-execution">Validation and execution<a class="headerlink" href="#validation-and-execution" title="Permanent link">&para;</a></h2>
+<p>The plugin parses YAML using the existing Ruamel.YAML safe loader and validates
+the complete file structure before loading or executing any target plugin.
+Empty documents, duplicate keys, non-mapping roots, non-array execution groups,
+and non-object execution items are rejected. An empty mapping (<code>{}</code>) is a valid
+no-op; empty execution arrays are skipped without loading their plugin.</p>
+<p>Plugins run in the order their keys appear in the file, and each plugin's
+executions run in array order. The runtime's existing plugin loader discovers
+and loads each target. Immediately before each execution, the target's options
+model validates its inputs, applies defaults, and performs its normal type
+conversion. Both field names and aliases are accepted.</p>
+<p>Every execution receives the same context instance. The CWL source is resolved
+once by the runtime, and batch does not create a new context for each execution.
+Nested batch invocations are rejected.</p>
+<h2 id="failures-and-debug-logging">Failures and debug logging<a class="headerlink" href="#failures-and-debug-logging" title="Permanent link">&para;</a></h2>
+<p>Execution stops at the first failure. Earlier executions are not rolled back;
+option validation for a later execution can fail after earlier executions have
+already completed.</p>
+<p>Unreadable files raise <code>PluginExecutionError</code>. Invalid YAML, invalid plan
+structure, plugin loading failures, invalid target options, and recursive batch
+invocations raise <code>PluginFailureError</code>. Exceptions raised by target plugins
+propagate unchanged to the runtime's <a href="../errors-and-exit-codes/">error handling</a>.</p>
+<p>Debug messages cover file parsing, structure validation, plugin loading, options
+validation, shared context identity, execution progress, timings, skipped groups,
+and failures. These debug messages omit input values.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../bundle-plugin/" class="btn btn-neutral float-left" title="Built-in bundle plugin"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../errors-and-exit-codes/" class="btn btn-neutral float-right" title="Errors and exit codes">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Terradue/transpiler-mate-runtime" class="fa fa-code-fork" style="color: #fcfcfc"> Terradue/transpiler-mate-runtime</a>
+        </span>
+    
+    
+      <span><a href="../bundle-plugin/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../errors-and-exit-codes/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
